@@ -1,0 +1,23 @@
+version: '3'
+services:
+
+  postgres:
+    container_name: shouse_postgres
+    restart: unless-stopped
+    image: postgres:14
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./pgsql/.env
+    volumes:
+      - shouse-pgsql-volume:/var/lib/postgresql/data
+    networks:
+      - shouse
+
+networks:
+  shouse:
+    driver: bridge
+
+volumes:
+  shouse-pgsql-volume:
+    driver: local
