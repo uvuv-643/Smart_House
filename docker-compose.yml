@@ -8,11 +8,27 @@ services:
     ports:
       - "5432:5432"
     env_file:
-      - ./pgsql/.env
+      - ./.env
     volumes:
       - shouse-pgsql-volume:/var/lib/postgresql/data
     networks:
       - shouse
+
+  redis:
+    image: redis:latest
+    container_name: shouse_redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    volumes:
+      - ./docker/redisdata:/usr/local/redis/data
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    env_file:
+      - ./.env
+    networks:
+      - shouse
+    command:
+      redis-server /usr/local/etc/redis/redis.conf --requirepass ${REDIS_PASSWORD} --save "" --appendonly yes --replica-read-only no
 
 networks:
   shouse:
@@ -21,3 +37,4 @@ networks:
 volumes:
   shouse-pgsql-volume:
     driver: local
+
