@@ -30,6 +30,24 @@ services:
     command:
       redis-server /usr/local/etc/redis/redis.conf --requirepass ${REDIS_PASSWORD} --save "" --appendonly yes --replica-read-only no
 
+  ktor_first:
+    build: ./ktor-sample-first
+    container_name: shouse_ktor_first
+    ports:
+      - "8088:8088"
+    restart: always
+    networks:
+      - shouse
+
+  ktor_second:
+    build: ./ktor-sample-second
+    container_name: shouse_ktor_second
+    ports:
+      - "8089:8089"
+    restart: always
+    networks:
+      - shouse
+
 networks:
   shouse:
     driver: bridge
